@@ -5,6 +5,8 @@ using System.Linq;
 using WindmillHelix.Brickficiency2.ExternalApi.Bricklink.Models;
 using System.Xml.Serialization;
 using System.IO;
+using Autofac;
+using WindmillHelix.Brickficiency2.DependencyInjection;
 
 namespace WindmillHelix.Brickficiency2.ExternalApi.Tests
 {
@@ -15,7 +17,11 @@ namespace WindmillHelix.Brickficiency2.ExternalApi.Tests
 
         public BricklinkCatalogTests()
         {
-            _service = new BricklinkCatalogApi();
+            var builder = new ContainerBuilder();
+            builder.RegisterType<AppConfigBricklinkCredentialProvider>().AsImplementedInterfaces().SingleInstance();
+
+            var container = DependencyInjectionConfig.Setup(builder);
+            _service = container.Resolve<IBricklinkCatalogApi>();
         }
 
         [TestMethod]

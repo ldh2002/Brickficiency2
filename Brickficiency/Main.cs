@@ -16,7 +16,6 @@ using System.Net;
 using System.Xml.Serialization;
 using System.Threading;
 using System.Globalization;
-using System.Data.SqlServerCe;
 using Ionic.Zip;
 using Brickficiency.Classes;
 using System.Diagnostics;
@@ -26,6 +25,8 @@ using WindmillHelix.Brickficiency2.Services;
 using WindmillHelix.Brickficiency2.Services.Data;
 using WindmillHelix.Brickficiency2.ExternalApi.Bricklink;
 using Brickficiency.UI;
+
+using WindmillHelix.Brickficiency2.Common.Domain;
 using WindmillHelix.Brickficiency2.Common.Providers;
 
 namespace Brickficiency
@@ -46,10 +47,6 @@ namespace Brickficiency
         //supplemental report when no matches are found
         //price guide info //////////////// what does this mean??
 
-        //put backups of code for both in gdrive
-        //error when DB is out of date
-
-
         ///////////////// add &v=D to pgpage get
         ///////////////// remove the thing that is saying "skip" while downloading pages
 
@@ -60,6 +57,7 @@ namespace Brickficiency
         private readonly IColorService _colorService;
         private readonly IItemTypeService _itemTypeService;
         private readonly ICategoryService _categoryService;
+        private readonly ICountryService _countryService;
         private readonly IItemService _itemService;
         private readonly IDataUpdateService _dataUpdateService;
 
@@ -81,11 +79,8 @@ namespace Brickficiency
         public static string settingsfilename = programdata + programname + "-Settings.xml";
 
         string debugpgfilename = programdata + "\\debug\\Debug-priceguide.txt";
-        string debugparsesource = programdata + "\\debug\\Debug-parsesource.html";
         string debugopenfilename = programdata + "\\debug\\Debug-open.txt";
-        string debugdbfilename = programdata + "\\debug\\Debug-db.txt";
         string debugwebreqfilename = programdata + "\\debug\\Debug-webreq.txt";
-        string debuglddimport = programdata + "\\debug\\Debug-lddimport.txt";
         public static string debugimportfilename = programdata + "\\debug\\Debug-import.txt";
         public static Settings settings = new Settings();
         public static string blacklist = "";
@@ -119,7 +114,6 @@ namespace Brickficiency
         public static int inLock = 0;
         public static List<ImageDL> imageDLList = new List<ImageDL>();
         public static List<ItemDL> itemDLList = new List<ItemDL>();
-        public static string RBapiKey = "bITJSRewdX";
 
         //calc stuff
         public Dictionary<string, string> db_countrystores = new Dictionary<string, string>();
@@ -132,12 +126,6 @@ namespace Brickficiency
         public List<FinalMatch> matches = new List<FinalMatch>();
         public Dictionary<string, bool> blacklistdic = new Dictionary<string, bool>();
 
-        //-------------------------------------------------------------------
-        // Fields added or significantly modified by CAC, 2015-06-24
-
-        // Set to true when this is being used for a class and false when it is being released to the public. 
-        public Boolean classroomUseMode = false;
-
         public List<Item> WantedItemList = new List<Item>();
         public Dictionary<string, Dictionary<string, StoreItem>> StoreDictionary = new Dictionary<string, Dictionary<string, StoreItem>>();
         public List<Store> StoreList = new List<Store>();
@@ -145,18 +133,13 @@ namespace Brickficiency
         private System.Timers.Timer timeoutTimer;
         public HashSet<string> storesWithItemsList = new HashSet<string>();
 
-        public const int RUN_OLD = 0;
         public const int RUN_NEW = 1;
         public const int RUN_APPROX = 2;
-        public const int RUN_CUSTOM = 3;
-        public const int RUN_CUSTOM_APPROX = 4;
         private int whichAlgToRun = 1;
         private Boolean running = false;
-        //--------------------------------------------------------------------
 
-        //int storestotal = 0;
         public bool displayreport = false;
-        //public int shortcount = 0;
+
         public long longcount = 0;
         public bool matchesfound = false;
         public int storeprogresscounter = 0;
@@ -169,7 +152,7 @@ namespace Brickficiency
         About aboutWindow = new About();
         CalcOptions calcOptionsWindow = new CalcOptions();
         HoverZoom hoverZoomWindow = new HoverZoom();
-        AddItem addItemWindow = new AddItem();
+        private AddItem addItemWindow;
         ChangeItem changeItemWindow = new ChangeItem();
         WantedListID wantedListWindow = new WantedListID();
         Brickficiency.ContextMenuStuff.ColourPicker colourPickerWindow = new Brickficiency.ContextMenuStuff.ColourPicker();
@@ -187,17 +170,11 @@ namespace Brickficiency
         Brickficiency.ContextMenuStuff.RemoveRemarks removeRemarksWindow = new Brickficiency.ContextMenuStuff.RemoveRemarks();
         #endregion
 
-
         #region Startup - read bricklink database files and create appdata folder structure
         private void InitStuff(object sender, EventArgs e)
         {
             DisableMenu();
             DisableCalcStop();
-
-            // Remove two menu items that are only used when the software is being used for a class.
-            customAlgorithmToolStripMenuItem.Visible = classroomUseMode;
-            customApproximationAlgorithmToolStripMenuItem.Visible = classroomUseMode;
-            oldAlgorithmToolStripMenuItem.Visible = classroomUseMode;
 
             this.splitContainer.SplitterDistance = System.Convert.ToInt32(this.Size.Height * 0.72);
             //DownloadBrickLinkDB();
@@ -206,7 +183,6 @@ namespace Brickficiency
 
         private void loadWorker_DoWork(object sender, DoWorkEventArgs e)
         {
-
             #region Create dir structure
             if (!Directory.Exists(programdata))
             {
@@ -235,75 +211,6 @@ namespace Brickficiency
             #endregion
 
             PopulateLookupsFromServices();
-
-            #region countries
-            db_countries.Add("Argentina", "AR");
-            db_countries.Add("Australia", "AU");
-            db_countries.Add("Austria", "AT");
-            db_countries.Add("Belarus", "BY");
-            db_countries.Add("Belgium", "BE");
-            db_countries.Add("Bolivia", "BO");
-            db_countries.Add("Bosnia and Herzegovina", "BA");
-            db_countries.Add("Brazil", "BR");
-            db_countries.Add("Bulgaria", "BG");
-            db_countries.Add("Canada", "CA");
-            db_countries.Add("Chile", "CL");
-            db_countries.Add("China", "CN");
-            db_countries.Add("Colombia", "CO");
-            db_countries.Add("Croatia", "HR");
-            db_countries.Add("Czech Republic", "CZ");
-            db_countries.Add("Denmark", "DK");
-            db_countries.Add("Ecuador", "EC");
-            db_countries.Add("El Salvador", "SV");
-            db_countries.Add("Estonia", "EE");
-            db_countries.Add("Finland", "FI");
-            db_countries.Add("France", "FR");
-            db_countries.Add("Germany", "DE");
-            db_countries.Add("Greece", "GR");
-            db_countries.Add("Hong Kong", "HK");
-            db_countries.Add("Hungary", "HU");
-            db_countries.Add("India", "IN");
-            db_countries.Add("Indonesia", "ID");
-            db_countries.Add("Ireland", "IE");
-            db_countries.Add("Israel", "IL");
-            db_countries.Add("Italy", "IT");
-            db_countries.Add("Japan", "JP");
-            db_countries.Add("Latvia", "LV");
-            db_countries.Add("Lithuania", "LT");
-            db_countries.Add("Luxembourg", "LU");
-            db_countries.Add("Macau", "MO");
-            db_countries.Add("Malaysia", "MY");
-            db_countries.Add("Mexico", "MX");
-            db_countries.Add("Monaco", "MC");
-            db_countries.Add("Netherlands", "NL");
-            db_countries.Add("New Zealand", "NZ");
-            db_countries.Add("Norway", "NO");
-            db_countries.Add("Pakistan", "PK");
-            db_countries.Add("Peru", "PE");
-            db_countries.Add("Philippines", "PH");
-            db_countries.Add("Poland", "PL");
-            db_countries.Add("Portugal", "PT");
-            db_countries.Add("Romania", "RO");
-            db_countries.Add("Russia", "RU");
-            db_countries.Add("San Marino", "SM");
-            db_countries.Add("Serbia", "RS");
-            db_countries.Add("Singapore", "SG");
-            db_countries.Add("Slovakia", "SK");
-            db_countries.Add("Slovenia", "SI");
-            db_countries.Add("South Africa", "ZA");
-            db_countries.Add("South Korea", "KR");
-            db_countries.Add("Spain", "ES");
-            db_countries.Add("Sweden", "SE");
-            db_countries.Add("Switzerland", "CH");
-            db_countries.Add("Syria", "SY");
-            db_countries.Add("Taiwan", "TW");
-            db_countries.Add("Thailand", "TH");
-            db_countries.Add("Turkey", "TR");
-            db_countries.Add("Ukraine", "UA");
-            db_countries.Add("United Kingdom", "UK");
-            db_countries.Add("USA", "US");
-            db_countries.Add("Venezuela", "VE");
-            #endregion
 
             #region Settings
             if (!File.Exists(settingsfilename))
@@ -428,19 +335,22 @@ namespace Brickficiency
             IColorService colorService,
             IItemTypeService itemTypeService,
             ICategoryService categoryService,
+            ICountryService countryService,
             IItemService itemService,
             IBricklinkLoginApi bricklinkLoginApi,
             ImportWantedListForm importWantedListForm,
             UpdateCheck updateConfirmationForm,
             IDataUpdateService dataUpdateService,
             IBricklinkCredentialProvider bricklinkCredentialProvider,
-            ApplicationMediator applicationMediator)
+            ApplicationMediator applicationMediator,
+            AddItem addItemForm)
         {
             _applicationMediator = applicationMediator;
 
             _colorService = colorService;
             _itemTypeService = itemTypeService;
             _categoryService = categoryService;
+            _countryService = countryService;
             _itemService = itemService;
             _dataUpdateService = dataUpdateService;
 
@@ -448,6 +358,7 @@ namespace Brickficiency
 
             _importWantedListForm = importWantedListForm;
             _updateConfirmationForm = updateConfirmationForm;
+            addItemWindow = addItemForm;
 
             // don't really want this referenced here directly, but it will take a bit to decouple this code
             _bricklinkLoginApi = bricklinkLoginApi;
@@ -1135,10 +1046,10 @@ namespace Brickficiency
         {
             lock (pageLock)
             {
-                string cookieHeader;
                 string pageSource;
                 //            StreamWriter swr = new StreamWriter(debugwebreqfilename);
 
+                // "(DateTime.Now > cookietime.AddMinutes(10))" is probably not an appropriate check as to wether to log in again.
                 if ((login == true) && ((loggedin == false) || (cookietime == null) || (DateTime.Now > cookietime.AddMinutes(10))))
                 {
                     var credential = _bricklinkCredentialProvider.GetCredentials();
@@ -1177,7 +1088,6 @@ namespace Brickficiency
                             tmpreq.ContentType = "application/x-www-form-urlencoded";
                             tmpreq.UserAgent = "Mozilla/5.0 (Windows NT 6.1; Win64; x64; rv:25.0) Gecko/20100101 Firefox/25.0";
                             HttpWebResponse tmpresp = (HttpWebResponse)tmpreq.GetResponse();
-                            cookieHeader = tmpresp.Headers["Set-cookie"];
                             cookies.Add(tmpresp.Cookies);
                             cookietime = DateTime.Now;
                             pagesuccess = true;
@@ -1378,14 +1288,7 @@ namespace Brickficiency
                 progressBar1.Maximum = value;
             }));
         }
-        private void SetProgressPercent(int value)
-        {
-            this.BeginInvoke(new MethodInvoker(delegate ()
-            {
-                progressBar1.Value = value;
-                progressBar1.Maximum = 100;
-            }));
-        }
+
         private void ResetProgressBar()
         {
             this.BeginInvoke(new MethodInvoker(delegate ()
@@ -1393,14 +1296,7 @@ namespace Brickficiency
                 progressBar1.Value = 0;
             }));
         }
-        private void AddProgress(int value)
-        {
-            this.BeginInvoke(new MethodInvoker(delegate ()
-            {
-                AddStatus(value + Environment.NewLine);
-                progressBar1.Value = progressBar1.Value + value;
-            }));
-        }
+
         private void Progress()
         {
             // This is sporadically locking up the GUI.  No idea why.
@@ -1569,20 +1465,41 @@ namespace Brickficiency
                 .ToDictionary(x => x.id, x => x);
             db_categories = categories;
 
-            var colors = _colorService.GetColors().ToDictionary(x => x.id, x => x);
+            var colors = _colorService.GetColors()
+                .ToDictionary(
+                    x => x.ColorId.ToString(),
+                    x =>
+                        new DBColour()
+                            {
+                                id = x.ColorId.ToString(),
+                                name = x.Name,
+                                rgb = x.Rgb,
+                                type = x.ColorTypeCode
+                            });
+
             db_colours = colors;
 
             // todo: not accounting for items that contain other items
-            var items = _itemService.GetItems().Select(x => new DBBLItem()
+            try
             {
-                id = string.Format("{0}-{1}", x.ItemTypeCode.ToUpperInvariant(), x.ItemId),
-                number = x.ItemId, // todo: what is this??
-                type = x.ItemTypeCode,
-                name = x.Name,
-                catid = x.CategoryId.ToString(),
-            });
+                var items = _itemService.GetItems().Select(x => new DBBLItem()
+                {
+                    id = string.Format("{0}-{1}", x.ItemTypeCode.ToUpperInvariant(), x.ItemId),
+                    number = x.ItemId, // todo: what is this??
+                    type = x.ItemTypeCode,
+                    name = x.Name,
+                    catid = x.CategoryId.ToString(),
+                });
 
-            db_blitems = items.ToDictionary(x => x.id, x => x);
+                var dupes = items.Select(x => x.id).GroupBy(x => x).Where(g => g.Count() > 1).Select(y => y).ToList();
+                db_blitems = items.ToDictionary(x => x.id, x => x);
+
+                db_countries = _countryService.GetCountries().ToDictionary(x => x.Name, x => x.CountryCode);
+            }
+            catch(Exception thrown)
+            {
+
+            }
         }
 
         private void DownloadBrickLinkDB()
@@ -1791,10 +1708,11 @@ namespace Brickficiency
                 }
                 else if (dgv[currenttab].Columns[e.ColumnIndex].Name == "name")
                 {
+                    // The changeItemWindow Form must be 'Loaded' before 'DisplayItem(...)' is called.
+                    changeItemWindow.Show();    // 'Show()' is used to invoke 'Load()'
                     changeItemWindow.DisplayItem(dgv[currenttab].Rows[e.RowIndex]);
                     changeItemWindow.BringToFront();
                     changeItemWindow.WindowState = FormWindowState.Normal;
-                    changeItemWindow.Show();
                 }
                 else if (dgv[currenttab].Columns[e.ColumnIndex].Name == "condition")
                 {
@@ -2037,7 +1955,6 @@ namespace Brickficiency
                 if (dgv_sender.Columns[e.ColumnIndex].Name == "displayimage")
                 {
                     DataGridViewRow dgv_MouseOverRow = dgv_sender.Rows[e.RowIndex];
-                    DataGridViewCell dgv_MouseOverCell = dgv_MouseOverRow.Cells[e.ColumnIndex];
                     string id = dgv_MouseOverRow.Cells["id"].Value.ToString();
                     string colour = dgv_MouseOverRow.Cells["colour"].Value.ToString();
 
@@ -2096,7 +2013,10 @@ namespace Brickficiency
         #region datagridview dataerror
         private void dgvDataError(object sender, DataGridViewDataErrorEventArgs anError)
         {
-            AddStatus("Invalid value: " + dgv[currenttab].EditingControl.Text + Environment.NewLine);
+            if (dgv[currenttab].EditingControl != null)
+                AddStatus("Invalid value: " + dgv[currenttab].EditingControl.Text + Environment.NewLine);
+            else
+                AddStatus("Invalid value: No EdditControl" + Environment.NewLine);
         }
         #endregion
 
@@ -2435,7 +2355,7 @@ namespace Brickficiency
         #region (Toolstrip -> Add)
         private void addItemToolstripButton_Click(object sender, EventArgs e)
         {
-            addItemWindow.Show();
+            addItemWindow.Show(this);
             addItemWindow.BringToFront();
             addItemWindow.WindowState = FormWindowState.Normal;
         }
@@ -2443,15 +2363,11 @@ namespace Brickficiency
 
         #region (Tools -> Calculate and Calculate2)
 
-        private void oldAlgorithmToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            runTheAlgorithm(RUN_OLD);
-        }
-
         private void newAlgorithmToolStripMenuItem_Click(object sender, EventArgs e)
         {
             runTheAlgorithm(RUN_NEW);
         }
+
         private void calculateButton_Click(object sender, EventArgs e)
         {
             runTheAlgorithm(RUN_NEW);
@@ -2461,18 +2377,8 @@ namespace Brickficiency
         {
             runTheAlgorithm(RUN_APPROX);
         }
-        private void customAlgorithmToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            runTheAlgorithm(RUN_CUSTOM);
-        }
-        private void customApproximationAlgorithmToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            runTheAlgorithm(RUN_CUSTOM_APPROX);
-        }
-        //private void calculateToolStripMenuItem_Click(object sender, EventArgs e)
-        //{
-        //}
         #endregion
+
         private void runTheAlgorithm(int whichAlgorithm)
         {
             whichAlgToRun = whichAlgorithm;
@@ -2486,7 +2392,7 @@ namespace Brickficiency
             }
             else
             {
-                calcOptionsWindow.ShowApproxOptions(whichAlgorithm == RUN_APPROX || whichAlgorithm == RUN_CUSTOM_APPROX);
+                calcOptionsWindow.ShowApproxOptions(whichAlgorithm == RUN_APPROX);
                 DialogResult result = calcOptionsWindow.ShowDialog();
                 if (result == DialogResult.OK)
                 {

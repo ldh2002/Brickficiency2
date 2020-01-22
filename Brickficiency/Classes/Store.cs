@@ -4,7 +4,8 @@ using System.Linq;
 using System.Text;
 
 namespace Brickficiency.Classes {
-    public class Store {
+    public class Store
+    {
         public Store() {
             name = "";
             items = new Dictionary<string, StoreItem>();
@@ -50,6 +51,35 @@ namespace Brickficiency.Classes {
             if (i == items.Count) {
                 return 0;
             } else {
+                // This is backwards because I want to sort descending.
+                return y.getQty(items[i].extid) - x.getQty(items[i].extid);
+            }
+        }
+    }
+
+    public class StoreComparerCustom : IComparer<Store>
+    {
+        private List<Item> items;
+        public StoreComparerCustom(List<Item> items)
+        {
+            this.items = items;
+        }
+        public int Compare(Store x, Store y)
+        {
+            int i = 0;
+            // toDo: check for required quantity also
+
+            double desiredquantityinshop = Math.Max (items[i].qty + 2, items[i].qty * 1.1 - 1);  
+            while (i < items.Count && x.getQty(items[i].extid) > desiredquantityinshop && y.getQty(items[i].extid) > desiredquantityinshop)
+            {
+                i++;
+            }
+            if (i == items.Count)
+            {
+                return 0;
+            }
+            else
+            {
                 // This is backwards because I want to sort descending.
                 return y.getQty(items[i].extid) - x.getQty(items[i].extid);
             }

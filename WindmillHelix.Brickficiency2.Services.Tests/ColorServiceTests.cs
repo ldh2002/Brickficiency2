@@ -4,6 +4,8 @@ using WindmillHelix.Brickficiency2.ExternalApi.Bricklink;
 using WindmillHelix.Brickficiency2.Services;
 using System.Linq;
 using WindmillHelix.Brickficiency2.Services.Data;
+using Autofac;
+using WindmillHelix.Brickficiency2.DependencyInjection;
 
 namespace WindmillHelix.Brickficiency2.Services.Tests
 {
@@ -14,9 +16,11 @@ namespace WindmillHelix.Brickficiency2.Services.Tests
 
         public ColorServiceTests()
         {
-            _service = new ColorService(
-                new BricklinkCatalogApi(),
-                new AppDataService());
+            var builder = new ContainerBuilder();
+            builder.RegisterType<AppConfigBricklinkCredentialProvider>().AsImplementedInterfaces().SingleInstance();
+
+            var container = DependencyInjectionConfig.Setup(builder);
+            _service = container.Resolve<IColorService>();
         }
 
         [TestMethod]
@@ -26,10 +30,10 @@ namespace WindmillHelix.Brickficiency2.Services.Tests
             Assert.IsNotNull(colors);
             Assert.AreNotEqual(0, colors.Count);
 
-            var white = colors.SingleOrDefault(x => x.id == "1");
+            var white = colors.SingleOrDefault(x => x.ColorId == 1);
             Assert.IsNotNull(white);
-            Assert.AreEqual("White", white.name);
-            Assert.AreEqual("FFFFFF", white.rgb);
+            Assert.AreEqual("White", white.Name);
+            Assert.AreEqual("FFFFFF", white.Rgb);
         }
     }
 }

@@ -27,5 +27,6 @@ namespace Brickficiency.Classes
         public string imageurl;
         public string largeimageurl;
         public string pgpage;
+        public string avrgprice;
     }
 }

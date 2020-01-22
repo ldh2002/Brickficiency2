@@ -11,6 +11,7 @@ using System.IO;
 using System.Text.RegularExpressions;
 using System.Xml.Serialization;
 using Brickficiency.Classes;
+using WindmillHelix.Brickficiency2.Common.Utils;
 
 namespace Brickficiency
 {
@@ -89,20 +90,13 @@ namespace Brickficiency
 
             switch (whichAlgToRun)
             {
-                case RUN_OLD:
-                    runTheAlgorithm(settings.minstores, settings.maxstores, settings.cont, StoreList, WantedItemList, RunOldAlgorithmOn, StandardPreProcess);
-                    break;
                 case RUN_NEW:
-                    runTheAlgorithm(settings.minstores, settings.maxstores, settings.cont, StoreList, WantedItemList, KStoreCalc, StandardPreProcess);
-                    break;
-                case RUN_CUSTOM:
-                    runTheAlgorithm(settings.minstores, settings.maxstores, settings.cont, StoreList, WantedItemList, CustomAlgorithm, CustomPreProcess);
+                    //runTheAlgorithm(settings.minstores, settings.maxstores, settings.cont, StoreList, WantedItemList, KStoreCalc, StandardPreProcess);
+                    runTheAlgorithm(settings.minstores, settings.maxstores, settings.cont, StoreList, WantedItemList, KStoreCalc, CustomPreProcess);
                     break;
                 case RUN_APPROX:
-                    runApproxAlgorithm(settings.minstores, settings.maxstores, settings.approxtime * 1000, StoreList, WantedItemList, KStoreCalc, StandardPreProcess);
-                    break;
-                case RUN_CUSTOM_APPROX:
-                    runApproxAlgorithm(settings.minstores, settings.maxstores, settings.approxtime * 1000, StoreList, WantedItemList, CustomApproximationAlgorithm, CustomApproximationPreProcess);
+                    //runApproxAlgorithm(settings.minstores, settings.maxstores, settings.approxtime * 1000, StoreList, WantedItemList, KStoreCalc, StandardPreProcess);
+                    runApproxAlgorithm(settings.minstores, settings.maxstores, settings.approxtime * 1000, StoreList, WantedItemList, KStoreCalc, CustomPreProcess);
                     break;
             }
 
@@ -149,7 +143,7 @@ namespace Brickficiency
 
             bool pagefail = false;
 
-            foreach (string country in settings.countries)
+            foreach (string country in settings.countries.Distinct())
             {
                 if (!calcWorker.CancellationPending)
                 {
@@ -220,7 +214,7 @@ namespace Brickficiency
             item.availstores = 0;
 
             List<string> itemcolours = new List<string>();
-            if (item.colour == "0" && live)
+            if (item.colour == "0" && live && ItemTypeUtil.DoesComeInColors(item.type))
             {
                 string colourpage;
                 if (db_blitems[item.id].pgcolourspage != null)
@@ -722,23 +716,6 @@ namespace Brickficiency
             }
         }
         #endregion
-
-        // This method was here but isn't used.  I commented it out.  CAC, 2015-07-08
-        //#region find cheapest from a list
-        //private List<int> FindCheapest(params decimal[] pricesin) {
-        //    Dictionary<int, decimal> prices = new Dictionary<int, decimal>();
-        //    int tmpcount = 0;
-        //    foreach (decimal price in pricesin) {
-        //        prices.Add(tmpcount, price);
-        //        tmpcount++;
-        //    }
-        //    List<int> indexesout = new List<int>();
-        //    foreach (KeyValuePair<int, decimal> index in prices.OrderBy(i => i.Value)) {
-        //        indexesout.Add(index.Key);
-        //    }
-        //    return indexesout;
-        //}
-        //#endregion
 
         private long previousPrinted = 0;
         #region Matches Counter

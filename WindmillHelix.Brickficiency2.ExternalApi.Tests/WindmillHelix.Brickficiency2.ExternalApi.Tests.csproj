@@ -35,12 +35,12 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Autofac, Version=4.0.0.0, Culture=neutral, PublicKeyToken=17863af14b0044da, processorArchitecture=MSIL">
-      <HintPath>..\packages\Autofac.4.0.0\lib\net451\Autofac.dll</HintPath>
-      <Private>True</Private>
+    <Reference Include="Autofac, Version=4.9.4.0, Culture=neutral, PublicKeyToken=17863af14b0044da, processorArchitecture=MSIL">
+      <HintPath>..\packages\Autofac.4.9.4\lib\net45\Autofac.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.configuration" />
+    <Reference Include="System.Drawing" />
     <Reference Include="System.XML" />
   </ItemGroup>
   <Choose>
@@ -51,7 +51,9 @@
     </When>
     <Otherwise>
       <ItemGroup>
-        <Reference Include="Microsoft.VisualStudio.QualityTools.UnitTestFramework" />
+        <Reference Include="Microsoft.VisualStudio.QualityTools.UnitTestFramework">
+          <Private>False</Private>
+        </Reference>
       </ItemGroup>
     </Otherwise>
   </Choose>
@@ -59,6 +61,8 @@
     <Compile Include="AppConfig.cs" />
     <Compile Include="AppConfigBricklinkCredentialProvider.cs" />
     <Compile Include="BricklinkCatalogTests.cs" />
+    <Compile Include="BricklinkImageTests.cs" />
+    <Compile Include="BricklinkItemAvailabilityTests.cs" />
     <Compile Include="BricklinkLoginTests.cs" />
     <Compile Include="BricklinkWantedListTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -79,7 +83,9 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <None Include="App.config" />
+    <None Include="App.config">
+      <SubType>Designer</SubType>
+    </None>
     <None Include="App.user.config">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
