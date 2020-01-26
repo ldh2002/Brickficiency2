@@ -1,27 +1,23 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
-namespace Brickficiency.Classes {
+﻿namespace Brickficiency.Classes
+{
 
     // This code taken from http://weblogs.asp.net/pwelter34/444961
-    using System;
-
     using System.Collections.Generic;
-    using System.Text;
     using System.Xml.Serialization;
 
     [XmlRoot("dictionary")]
 
-    public class SerializableDictionary<TKey, TValue>: Dictionary<TKey, TValue>, IXmlSerializable {
+    public class SerializableDictionary<TKey, TValue> : Dictionary<TKey, TValue>, IXmlSerializable
+    {
 
         #region IXmlSerializable Members
-        public System.Xml.Schema.XmlSchema GetSchema() {
+        public System.Xml.Schema.XmlSchema GetSchema()
+        {
             return null;
         }
 
-        public void ReadXml(System.Xml.XmlReader reader) {
+        public void ReadXml(System.Xml.XmlReader reader)
+        {
             XmlSerializer keySerializer = new XmlSerializer(typeof(TKey));
             XmlSerializer valueSerializer = new XmlSerializer(typeof(TValue));
 
@@ -30,7 +26,8 @@ namespace Brickficiency.Classes {
             if (wasEmpty)
                 return;
 
-            while (reader.NodeType != System.Xml.XmlNodeType.EndElement) {
+            while (reader.NodeType != System.Xml.XmlNodeType.EndElement)
+            {
                 reader.ReadStartElement("item");
                 reader.ReadStartElement("key");
                 TKey key = (TKey)keySerializer.Deserialize(reader);
@@ -52,7 +49,8 @@ namespace Brickficiency.Classes {
 
 
 
-        public void WriteXml(System.Xml.XmlWriter writer) {
+        public void WriteXml(System.Xml.XmlWriter writer)
+        {
 
             XmlSerializer keySerializer = new XmlSerializer(typeof(TKey));
 
@@ -60,7 +58,8 @@ namespace Brickficiency.Classes {
 
 
 
-            foreach (TKey key in this.Keys) {
+            foreach (TKey key in this.Keys)
+            {
 
                 writer.WriteStartElement("item");
 

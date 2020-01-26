@@ -1,14 +1,10 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Net;
-using System.Text;
-using System.Threading.Tasks;
 using System.Web;
-using System.Xml;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
 using WindmillHelix.Brickficiency2.ExternalApi.Rebrickable.Models;
 
 namespace WindmillHelix.Brickficiency2.ExternalApi.Rebrickable
@@ -47,7 +43,7 @@ namespace WindmillHelix.Brickficiency2.ExternalApi.Rebrickable
             result.BricklinkItemIds = new List<string>();
             result.RebrickablePartIds = new List<string>();
 
-            if(part.PartNumber != partNumber)
+            if (part.PartNumber != partNumber)
             {
                 result.BricklinkItemIds.Add(part.PartNumber);
                 result.RebrickablePartIds.Add(part.PartNumber);
@@ -55,7 +51,7 @@ namespace WindmillHelix.Brickficiency2.ExternalApi.Rebrickable
 
             var key = part.ExternalIds?.Keys.SingleOrDefault(x => x.Equals("bricklink", StringComparison.InvariantCultureIgnoreCase));
 
-            if(!string.IsNullOrEmpty(key))
+            if (!string.IsNullOrEmpty(key))
             {
                 var values = part.ExternalIds[key];
                 result.BricklinkItemIds.AddRange(values.Where(x => x != part.PartNumber && x != partNumber));

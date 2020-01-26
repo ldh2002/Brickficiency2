@@ -1,11 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using Autofac;
+using Brickficiency.UI;
+using System;
 using System.Windows.Forms;
 using WindmillHelix.Brickficiency2.DependencyInjection;
-using Autofac;
-using Brickficiency.UI;
 
 namespace Brickficiency
 {

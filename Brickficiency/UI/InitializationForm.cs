@@ -1,14 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
 using System.Diagnostics;
 using System.Drawing;
 using System.Linq;
 using System.Net;
-using System.Text;
 using System.Threading;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 using WindmillHelix.Brickficiency2.Common.Domain;
 using WindmillHelix.Brickficiency2.Services;
@@ -135,7 +131,7 @@ namespace Brickficiency.UI
                 }
             }
 
-            if(toValidate.Count == 0)
+            if (toValidate.Count == 0)
             {
                 return;
             }
@@ -147,7 +143,7 @@ namespace Brickficiency.UI
                 var credential = item.Item2;
 
                 bool isValid = _credentialService.ValidateCredential(system, credential);
-                if(!isValid)
+                if (!isValid)
                 {
                     // remove any saved passwords that are no longer valid so we don't lock out accounts
                     credential.Password = null;

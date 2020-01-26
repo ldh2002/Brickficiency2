@@ -1,20 +1,12 @@
-﻿using System;
-using System.Collections;
+﻿using Brickficiency.Helpers;
+using Brickficiency.Providers;
+using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Data;
-using System.Diagnostics;
 using System.Drawing;
 using System.Linq;
-using System.Text;
-using System.Windows.Forms;
-using System.IO;
 using System.Threading.Tasks;
-
-using Brickficiency.Classes;
-using Brickficiency.Helpers;
-using Brickficiency.Providers;
-
+using System.Windows.Forms;
 using WindmillHelix.Brickficiency2.Common;
 using WindmillHelix.Brickficiency2.Common.Domain;
 using WindmillHelix.Brickficiency2.Services;
@@ -44,7 +36,7 @@ namespace Brickficiency
         private IItemWorkbook _itemWorkbook;
 
         public AddItem(
-            IItemService itemService, 
+            IItemService itemService,
             IItemTypeService itemTypeService,
             IImageService imageService,
             IColorService colorService,

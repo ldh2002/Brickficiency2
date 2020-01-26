@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using WindmillHelix.Brickficiency2.Common;
 using WindmillHelix.Brickficiency2.Common.Xml;
 
@@ -42,7 +40,7 @@ namespace WindmillHelix.Brickficiency2.Services.Data
         {
             var properties = ReadProperties();
 
-            if(!properties.ContainsKey(_lastUpdatePropertyName))
+            if (!properties.ContainsKey(_lastUpdatePropertyName))
             {
                 return null;
             }
@@ -73,7 +71,7 @@ namespace WindmillHelix.Brickficiency2.Services.Data
 
         public void PrefetchData()
         {
-            foreach(var action in _prefetchActions)
+            foreach (var action in _prefetchActions)
             {
                 action();
             }
@@ -81,7 +79,7 @@ namespace WindmillHelix.Brickficiency2.Services.Data
 
         public void UpdateData()
         {
-            foreach(var item in _refreshables)
+            foreach (var item in _refreshables)
             {
                 item.Refresh();
             }

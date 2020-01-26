@@ -1,16 +1,13 @@
-﻿using System;
+﻿using Brickficiency.Classes;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Diagnostics;
+using System.IO;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Forms;
-
-using System.IO;
 using System.Text.RegularExpressions;
+using System.Windows.Forms;
 using System.Xml.Serialization;
-using Brickficiency.Classes;
 using WindmillHelix.Brickficiency2.Common.Utils;
 
 namespace Brickficiency
@@ -91,10 +88,12 @@ namespace Brickficiency
             switch (whichAlgToRun)
             {
                 case RUN_NEW:
-                    runTheAlgorithm(settings.minstores, settings.maxstores, settings.cont, StoreList, WantedItemList, KStoreCalc, StandardPreProcess);
+                    //runTheAlgorithm(settings.minstores, settings.maxstores, settings.cont, StoreList, WantedItemList, KStoreCalc, StandardPreProcess);
+                    runTheAlgorithm(settings.minstores, settings.maxstores, settings.cont, StoreList, WantedItemList, KStoreCalc, CustomPreProcess);
                     break;
                 case RUN_APPROX:
-                    runApproxAlgorithm(settings.minstores, settings.maxstores, settings.approxtime * 1000, StoreList, WantedItemList, KStoreCalc, StandardPreProcess);
+                    //runApproxAlgorithm(settings.minstores, settings.maxstores, settings.approxtime * 1000, StoreList, WantedItemList, KStoreCalc, StandardPreProcess);
+                    runApproxAlgorithm(settings.minstores, settings.maxstores, settings.approxtime * 1000, StoreList, WantedItemList, KStoreCalc, CustomPreProcess);
                     break;
             }
 

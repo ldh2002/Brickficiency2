@@ -1,29 +1,40 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
-namespace Brickficiency.Classes {
-    public class Store {
-        public Store() {
+namespace Brickficiency.Classes
+{
+    public class Store
+    {
+        public Store()
+        {
             name = "";
             items = new Dictionary<string, StoreItem>();
+
         }
-        public Store(string storeName, Dictionary<string, StoreItem> itemList) {
+        public Store(string storeName, Dictionary<string, StoreItem> itemList)
+        {
             name = storeName;
             items = itemList;
         }
         private string name;
         private Dictionary<string, StoreItem> items;
-
-        public StoreItem getItem(string id) {
+        private BitArray[] bitArrays;
+        public const int bitArrayEnough = 0;
+        public const int bitArraySome = 1;
+        public const int bitArrayFew = 2;
+        
+        public StoreItem getItem(string id)
+        {
             return items[id];
         }
-        public decimal getPrice(string id) {
+        public decimal getPrice(string id)
+        {
             return items[id].price;
         }
 
-        public int getQty(string id) {
+        public int getQty(string id)
+        {
             return items[id].qty;
         }
 
@@ -32,27 +43,137 @@ namespace Brickficiency.Classes {
             return items[id].colour;
         }
 
-        public string getName() {
+        public string getName()
+        {
             return name;
+        }
+
+        public void createBitArrays(List<Item> itemList)
+        {
+            bitArrays = new BitArray[3];
+            bitArrays[bitArrayEnough] = new BitArray(itemList.Count);
+            bitArrays[bitArraySome] = new BitArray(itemList.Count);
+            bitArrays[bitArrayFew] = new BitArray(itemList.Count);
+                            
+            // ToDo: I need to ensure items have a dedicated index throughout all stores
+            foreach (Item item in itemList)
+            {
+                if (this.getQty(item.extid) > 0)
+                {
+                    bitArrays[bitArraySome].Set(itemList.IndexOf(item), true);
+                    if (this.getQty(item.extid) > item.qty)
+                    {
+                        bitArrays[bitArrayEnough].Set(itemList.IndexOf(item), true);
+                    }
+                    else
+                    {
+                        bitArrays[bitArrayFew].Set(itemList.IndexOf(item), true);
+                    }
+                    // else quantity=0, so bit remains false in all bitArrays
+                }
+            }
+
+        }
+
+        public BitArray GetBitArray(int BitArrayType)
+        {
+            return bitArrays[BitArrayType];
         }
     }
 
-    public class StoreComparer : IComparer<Store> {
+    public class StoreComparer : IComparer<Store>
+    {
         private List<Item> items;
-        public StoreComparer(List<Item> items) {
+        public StoreComparer(List<Item> items)
+        {
             this.items = items;
         }
-        public int Compare(Store x, Store y) {
+        public int Compare(Store x, Store y)
+        {
             int i = 0;
-            while (i < items.Count && x.getQty(items[i].extid) == y.getQty(items[i].extid)) {
+            while (i < items.Count && x.getQty(items[i].extid) == y.getQty(items[i].extid))
+            {
                 i++;
             }
-            if (i == items.Count) {
+            if (i == items.Count)
+            {
                 return 0;
-            } else {
+            }
+            else
+            {
                 // This is backwards because I want to sort descending.
                 return y.getQty(items[i].extid) - x.getQty(items[i].extid);
             }
+        }
+    }
+
+    public class StoreComparerCustomOld : IComparer<Store>
+    {
+        private List<Item> items;
+        public StoreComparerCustomOld(List<Item> items)
+        {
+            this.items = items;
+        }
+        public int Compare(Store x, Store y)
+        {
+            int i = 0;
+            // toDo: check for required quantity also
+
+            double desiredquantityinshop = Math.Max(items[i].qty + 2, items[i].qty * 1.1 - 1);
+            while (i < items.Count && x.getQty(items[i].extid) > desiredquantityinshop && y.getQty(items[i].extid) > desiredquantityinshop)
+            {
+                i++;
+            }
+            if (i == items.Count)
+            {
+                return 0;
+            }
+            else
+            {
+                // This is backwards because I want to sort descending.
+                return y.getQty(items[i].extid) - x.getQty(items[i].extid);
+            }
+        }
+    }
+
+    public class StoreComparerCustom : IComparer<Store>
+    {
+        private List<Item> items;        
+        public StoreComparerCustom(List<Item> items)
+        {
+            this.items = items;
+        }
+        public int Compare(Store x, Store y)
+        {
+            for (int i = 0; i < items.Count; i++)
+            {
+                if (y.GetBitArray(Store.bitArrayEnough).Get(i))
+                {
+                    if (x.GetBitArray(Store.bitArrayEnough).Get(i))
+                    {
+                        i++;
+                    }
+                    else return 1;
+                }
+                else if (x.GetBitArray(Store.bitArrayEnough).Get(i))
+                {
+                    return -1;
+                }
+                else if (y.GetBitArray(Store.bitArrayFew).Get(i))
+                {
+                    if (x.GetBitArray(Store.bitArrayFew).Get(i))
+                    {
+                        i++;
+                    }
+                    else return 1;
+                }
+                else if (x.GetBitArray(Store.bitArrayFew).Get(i))
+                {
+                    return -1;
+                }
+                else i++;
+            }
+            return 0;
         }
     }
 }

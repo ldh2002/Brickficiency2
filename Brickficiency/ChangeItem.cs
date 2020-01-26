@@ -1,17 +1,12 @@
-﻿using System;
-using System.Collections;
+﻿using Brickficiency.Classes;
+using Brickficiency.Helpers;
+using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Data;
 using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Windows.Forms;
 using System.IO;
-using Brickficiency.Classes;
-using Brickficiency.Helpers;
-
-using WindmillHelix.Brickficiency2.Common;
+using System.Linq;
+using System.Windows.Forms;
 
 namespace Brickficiency
 {
@@ -22,7 +17,8 @@ namespace Brickficiency
         HoverZoom hoverZoomWindow = new HoverZoom();
         public string filter
         {
-            get{
+            get
+            {
                 return filterBox.Text;
             }
         }

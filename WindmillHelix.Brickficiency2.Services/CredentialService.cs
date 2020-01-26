@@ -1,9 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Net;
-using System.Text;
-using System.Threading.Tasks;
 using WindmillHelix.Brickficiency2.Common.Domain;
 using WindmillHelix.Brickficiency2.Common.Xml;
 using WindmillHelix.Brickficiency2.ExternalApi.Bricklink;
@@ -27,7 +23,7 @@ namespace WindmillHelix.Brickficiency2.Services
         public NetworkCredential GetCredential(ExternalSystem system)
         {
             var appData = _appDataService.GetAppData(GetAppDataKey(system));
-            if(string.IsNullOrWhiteSpace(appData))
+            if (string.IsNullOrWhiteSpace(appData))
             {
                 return null;
             }

@@ -1,18 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading;
-using System.Threading.Tasks;
-using Autofac;
+﻿using Autofac;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using System;
+using System.Collections.Generic;
+using System.Threading;
 using WindmillHelix.Brickficiency2.Common;
 using WindmillHelix.Brickficiency2.Common.Domain;
 using WindmillHelix.Brickficiency2.Common.Providers;
 using WindmillHelix.Brickficiency2.DependencyInjection;
 using WindmillHelix.Brickficiency2.Services.Calculator;
 using WindmillHelix.Brickficiency2.Services.Calculator.Models;
-using WindmillHelix.Brickficiency2.Services.Ldd;
 
 namespace WindmillHelix.Brickficiency2.Services.Tests
 {

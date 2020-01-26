@@ -1,9 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using WindmillHelix.Brickficiency2.Common.Xml;
 
 namespace WindmillHelix.Brickficiency2.Services.Data
@@ -34,7 +30,7 @@ namespace WindmillHelix.Brickficiency2.Services.Data
         protected IReadOnlyCollection<T> GetItems()
         {
             var isInitialized = _isInitialized.Value;
-            if(!isInitialized)
+            if (!isInitialized)
             {
                 throw new Exception("Service failed to initialize.");
             }

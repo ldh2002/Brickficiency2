@@ -1,13 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.IO;
 using System.IO.Compression;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Xml;
-using System.Xml.Linq;
-using WindmillHelix.Brickficiency2.Common;
 
 namespace WindmillHelix.Brickficiency2.Services.Ldd
 {
@@ -23,12 +18,12 @@ namespace WindmillHelix.Brickficiency2.Services.Ldd
             var partNodes = doc.SelectNodes("//Part");
 
             List<LddPart> parts = new List<LddPart>();
-            if(partNodes == null)
+            if (partNodes == null)
             {
                 return parts;
             }
 
-            foreach(XmlNode node in partNodes)
+            foreach (XmlNode node in partNodes)
             {
                 var part = new LddPart();
 

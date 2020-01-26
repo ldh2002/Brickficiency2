@@ -1,13 +1,10 @@
-﻿using System;
+﻿using Brickficiency.Classes;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
-using System.Drawing;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
-using Brickficiency.Classes;
 using WindmillHelix.Brickficiency2.Common.Domain;
 using WindmillHelix.Brickficiency2.Services;
 
@@ -122,7 +119,7 @@ namespace Brickficiency.UI
                     this.Close();
                 });
             }
-            catch(Exception thrown)
+            catch (Exception thrown)
             {
                 throw;
             }

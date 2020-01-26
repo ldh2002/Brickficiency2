@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
-namespace Brickficiency.Classes
+﻿namespace Brickficiency.Classes
 {
     public class Item
     {
@@ -27,5 +22,6 @@ namespace Brickficiency.Classes
         public string imageurl;
         public string largeimageurl;
         public string pgpage;
+        public string avrgprice;
     }
 }

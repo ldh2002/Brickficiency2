@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace WindmillHelix.Brickficiency2.Services.Calculator.Models
+﻿namespace WindmillHelix.Brickficiency2.Services.Calculator.Models
 {
     public class BlacklistedStore
     {

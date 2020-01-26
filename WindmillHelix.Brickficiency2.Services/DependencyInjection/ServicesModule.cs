@@ -1,10 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using Autofac;
 using System.Linq;
 using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
-using Autofac;
 using WindmillHelix.Brickficiency2.Services.Calculator;
 
 namespace WindmillHelix.Brickficiency2.Services.DependencyInjection

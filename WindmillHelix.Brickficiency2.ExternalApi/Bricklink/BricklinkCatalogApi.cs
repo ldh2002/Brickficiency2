@@ -1,12 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Net;
-using System.Text;
-using System.Threading.Tasks;
 using System.Web;
-using System.Xml.Serialization;
 using WindmillHelix.Brickficiency2.Common.Xml;
 using WindmillHelix.Brickficiency2.ExternalApi.Bricklink.Models;
 

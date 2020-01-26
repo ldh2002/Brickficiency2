@@ -1,8 +1,7 @@
-﻿using System;
+﻿using Autofac;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using WindmillHelix.Brickficiency2.ExternalApi.Bricklink;
-using WindmillHelix.Brickficiency2.Services;
 using System.Linq;
+using WindmillHelix.Brickficiency2.DependencyInjection;
 using WindmillHelix.Brickficiency2.Services.Data;
 using Autofac;
 using WindmillHelix.Brickficiency2.DependencyInjection;

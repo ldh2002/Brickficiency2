@@ -1,15 +1,8 @@
-﻿using System;
+﻿using Newtonsoft.Json;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Net;
-using System.Text;
-using System.Threading.Tasks;
-using HtmlAgilityPack;
-using Newtonsoft.Json;
-using WindmillHelix.Brickficiency2.Common;
 using WindmillHelix.Brickficiency2.Common.Domain;
-using WindmillHelix.Brickficiency2.ExternalApi.Bricklink.Models;
 
 namespace WindmillHelix.Brickficiency2.ExternalApi.Bricklink
 {
@@ -85,7 +78,7 @@ namespace WindmillHelix.Brickficiency2.ExternalApi.Bricklink
             var results = new List<WantedList>();
 
             var listCount = content.wantedLists.Count;
-            for(int i = 0; i < content.wantedLists.Count; i++)
+            for (int i = 0; i < content.wantedLists.Count; i++)
             {
                 var wantedList = content.wantedLists[i];
                 var list = new WantedList();
@@ -108,7 +101,7 @@ namespace WindmillHelix.Brickficiency2.ExternalApi.Bricklink
 
             var json = html.Substring(start, end - start);
             json = json.Trim();
-            if(json.EndsWith(";"))
+            if (json.EndsWith(";"))
             {
                 json = json.Substring(0, json.Length - 1);
             }

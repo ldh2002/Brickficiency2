@@ -1,12 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
 using System.Net;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 using WindmillHelix.Brickficiency2.Common.Domain;
 using WindmillHelix.Brickficiency2.Services;
@@ -61,23 +54,23 @@ namespace Brickficiency
 
             var credential = new NetworkCredential(UsernameTextBox.Text, PasswordTextBox.Text);
             bool areCredentialsValid = _credentialService.ValidateCredential(
-                ExternalSystem.Bricklink, 
+                ExternalSystem.Bricklink,
                 credential);
 
-            if(!areCredentialsValid)
+            if (!areCredentialsValid)
             {
                 MessageBox.Show("Invalid credentials.");
                 return;
             }
 
-            if(RememberPasswordCheckBox.Checked)
+            if (RememberPasswordCheckBox.Checked)
             {
                 _credentialService.SetCredential(ExternalSystem.Bricklink, credential);
             }
             else
             {
                 _credentialService.SetCredential(
-                    ExternalSystem.Bricklink, 
+                    ExternalSystem.Bricklink,
                     new NetworkCredential(UsernameTextBox.Text, string.Empty));
             }
 

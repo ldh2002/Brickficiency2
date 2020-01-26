@@ -1,9 +1,6 @@
-﻿using System;
-using System.Text;
-using System.Collections.Generic;
+﻿using Autofac;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using WindmillHelix.Brickficiency2.DependencyInjection;
-using Autofac;
 using WindmillHelix.Brickficiency2.Services.Data;
 
 namespace WindmillHelix.Brickficiency2.Services.Tests

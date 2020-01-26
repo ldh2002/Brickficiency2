@@ -1,9 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Net;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 using WindmillHelix.Brickficiency2.Common.Domain;
 using WindmillHelix.Brickficiency2.Common.Providers;
@@ -20,7 +16,7 @@ namespace Brickficiency.Providers
         private string _password;
 
         public BricklinkCredentialProvider(
-            ICredentialService credentialService, 
+            ICredentialService credentialService,
             Func<GetPassword> getPasswordFormFactory)
         {
             _getPasswordFormFactory = getPasswordFormFactory;
