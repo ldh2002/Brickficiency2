@@ -1,9 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace WindmillHelix.Brickficiency2.Services
 {
@@ -12,7 +8,7 @@ namespace WindmillHelix.Brickficiency2.Services
         public string GetAppData(string key)
         {
             var fileName = GetFileName(key);
-            if(!File.Exists(fileName))
+            if (!File.Exists(fileName))
             {
                 return null;
             }
@@ -50,7 +46,7 @@ namespace WindmillHelix.Brickficiency2.Services
         private void EnsureAppDataFolderExists()
         {
             var folderPath = GetAppDataFolderPath();
-            if(!Directory.Exists(folderPath))
+            if (!Directory.Exists(folderPath))
             {
                 Directory.CreateDirectory(folderPath);
             }

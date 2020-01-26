@@ -1,33 +1,21 @@
-﻿using System;
+﻿using Brickficiency.Classes;
+using Brickficiency.UI;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Forms;
-
-using System.IO;
-using System.Text.RegularExpressions;
-using System.Collections;
-using System.Collections.Concurrent;
-using System.Net;
-using System.Xml.Serialization;
-using System.Threading;
 using System.Globalization;
-using Ionic.Zip;
-using Brickficiency.Classes;
-using System.Diagnostics;
-using WindmillHelix.Brickficiency2.Common;
-using WindmillHelix.Brickficiency2.DependencyInjection;
-using WindmillHelix.Brickficiency2.Services;
-using WindmillHelix.Brickficiency2.Services.Data;
-using WindmillHelix.Brickficiency2.ExternalApi.Bricklink;
-using Brickficiency.UI;
-
+using System.IO;
+using System.Linq;
+using System.Net;
+using System.Text.RegularExpressions;
+using System.Windows.Forms;
+using System.Xml.Serialization;
 using WindmillHelix.Brickficiency2.Common.Domain;
 using WindmillHelix.Brickficiency2.Common.Providers;
+using WindmillHelix.Brickficiency2.ExternalApi.Bricklink;
+using WindmillHelix.Brickficiency2.Services.Data;
 
 namespace Brickficiency
 {
@@ -1053,11 +1041,11 @@ namespace Brickficiency
                 if ((login == true) && ((loggedin == false) || (cookietime == null) || (DateTime.Now > cookietime.AddMinutes(10))))
                 {
                     var credential = _bricklinkCredentialProvider.GetCredentials();
-                    if(credential == null)
+                    if (credential == null)
                     {
                         return null;
                     }
-                    
+
                     // don't really want this referenced here directly, but it will take a bit to decouple this code
                     var didLogIn = _bricklinkLoginApi.Login(cookies, credential.UserName, credential.Password);
 
@@ -1470,12 +1458,12 @@ namespace Brickficiency
                     x => x.ColorId.ToString(),
                     x =>
                         new DBColour()
-                            {
-                                id = x.ColorId.ToString(),
-                                name = x.Name,
-                                rgb = x.Rgb,
-                                type = x.ColorTypeCode
-                            });
+                        {
+                            id = x.ColorId.ToString(),
+                            name = x.Name,
+                            rgb = x.Rgb,
+                            type = x.ColorTypeCode
+                        });
 
             db_colours = colors;
 
@@ -1496,7 +1484,7 @@ namespace Brickficiency
 
                 db_countries = _countryService.GetCountries().ToDictionary(x => x.Name, x => x.CountryCode);
             }
-            catch(Exception thrown)
+            catch (Exception thrown)
             {
 
             }

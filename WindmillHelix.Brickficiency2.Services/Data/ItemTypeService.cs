@@ -1,9 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using WindmillHelix.Brickficiency2.Common;
 using WindmillHelix.Brickficiency2.Common.Domain;
 using WindmillHelix.Brickficiency2.ExternalApi.Bricklink;
 
@@ -14,8 +10,8 @@ namespace WindmillHelix.Brickficiency2.Services.Data
         private readonly IBricklinkCatalogApi _bricklinkCatalogService;
 
         public ItemTypeService(
-            IAppDataService appDataService, 
-            IBricklinkCatalogApi bricklinkCatalogService) 
+            IAppDataService appDataService,
+            IBricklinkCatalogApi bricklinkCatalogService)
             : base(appDataService)
         {
             _bricklinkCatalogService = bricklinkCatalogService;

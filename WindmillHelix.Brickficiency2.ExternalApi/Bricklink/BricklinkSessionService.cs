@@ -1,9 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Net;
-using System.Text;
-using System.Threading.Tasks;
 using WindmillHelix.Brickficiency2.Common.Providers;
 
 namespace WindmillHelix.Brickficiency2.ExternalApi.Bricklink
@@ -48,7 +44,7 @@ namespace WindmillHelix.Brickficiency2.ExternalApi.Bricklink
                 var credentials = _bricklinkCredentialProvider.GetCredentials();
                 var wasLoggedIn = _bricklinkLoginApi.Login(_cookies, credentials.UserName, credentials.Password);
 
-                if(wasLoggedIn)
+                if (wasLoggedIn)
                 {
                     _lastLogin = DateTime.Now;
                     return;

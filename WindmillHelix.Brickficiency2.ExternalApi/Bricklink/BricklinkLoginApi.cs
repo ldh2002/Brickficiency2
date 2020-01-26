@@ -1,12 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using Newtonsoft.Json;
 using System.IO;
-using System.Linq;
 using System.Net;
-using System.Text;
-using System.Threading.Tasks;
 using System.Web;
-using Newtonsoft.Json;
 
 namespace WindmillHelix.Brickficiency2.ExternalApi.Bricklink
 {
@@ -48,7 +43,7 @@ namespace WindmillHelix.Brickficiency2.ExternalApi.Bricklink
                 var serializer = new JsonSerializer();
 
                 dynamic content = serializer.Deserialize(reader);
-                var result =    content.returnCode.ToString() == "0"
+                var result = content.returnCode.ToString() == "0"
                              || content.returnMessage.ToString() == "Already Logged-in!";
 
                 return result;

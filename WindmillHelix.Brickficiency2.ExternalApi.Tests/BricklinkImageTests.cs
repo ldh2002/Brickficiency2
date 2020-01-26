@@ -1,11 +1,6 @@
-﻿using System;
-using System.Text;
-using System.Collections.Generic;
+﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Drawing.Imaging;
 using System.Threading.Tasks;
-
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-
 using WindmillHelix.Brickficiency2.Common;
 using WindmillHelix.Brickficiency2.ExternalApi.Bricklink;
 

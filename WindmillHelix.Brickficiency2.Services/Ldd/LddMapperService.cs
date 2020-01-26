@@ -1,8 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using WindmillHelix.Brickficiency2.Common;
 using WindmillHelix.Brickficiency2.Common.Domain;
 using WindmillHelix.Brickficiency2.ExternalApi.Rebrickable;
@@ -33,7 +30,7 @@ namespace WindmillHelix.Brickficiency2.Services.Ldd
             var mapped = new MappedPart();
 
             var itemDetails = GetPart(source);
-            if(itemDetails == null)
+            if (itemDetails == null)
             {
                 result.WasSuccessful = false;
                 result.Message = string.Format("Unable to locate part mapping.");
@@ -79,13 +76,13 @@ namespace WindmillHelix.Brickficiency2.Services.Ldd
                 checkedIds.Add(id);
 
                 var itemDetails = _itemService.GetItem(ItemTypeCodes.Part, id);
-                if(itemDetails != null)
+                if (itemDetails != null)
                 {
                     return itemDetails;
                 }
 
                 var rebrickablePartInfo = _rebrickableApi.GetPartInfo(id);
-                if(rebrickablePartInfo != null)
+                if (rebrickablePartInfo != null)
                 {
                     var candidates = new List<string>();
                     candidates.AddRange(rebrickablePartInfo.BricklinkItemIds);
@@ -102,12 +99,12 @@ namespace WindmillHelix.Brickficiency2.Services.Ldd
         private int? GetColorId(LddPart source)
         {
             var colorId = source.Materials;
-            if(colorId.EndsWith(",0"))
+            if (colorId.EndsWith(",0"))
             {
                 colorId = colorId.Substring(0, colorId.Length - 2);
             }
 
-            if(!_colorMap.ContainsKey(colorId))
+            if (!_colorMap.ContainsKey(colorId))
             {
                 return null;
             }

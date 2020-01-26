@@ -1,8 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using WindmillHelix.Brickficiency2.Common;
 using WindmillHelix.Brickficiency2.Common.Domain;
 
@@ -21,7 +18,7 @@ namespace WindmillHelix.Brickficiency2.Services.Data
         {
             // todo: pull these from somewhere in the future, just trying to get them out of Main.cs right now
             Action<string, string, string> addCountry = (name, code, regionCode) =>
-                        _countries.Add(new Country() {CountryCode = code, Name = name, RegionCode = regionCode});
+                        _countries.Add(new Country() { CountryCode = code, Name = name, RegionCode = regionCode });
 
             addCountry("Argentina", "AR", RegionCodes.Unknown);
             addCountry("Australia", "AU", RegionCodes.Unknown);

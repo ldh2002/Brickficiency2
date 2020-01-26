@@ -243,6 +243,7 @@
     </Compile>
     <Compile Include="ExtensionMethods.cs" />
     <Compile Include="Helpers\AddEditItemListViewItemComparer.cs" />
+    <Compile Include="Helpers\StoreBitArray.cs" />
     <Compile Include="HoverZoom.cs">
       <SubType>Form</SubType>
     </Compile>

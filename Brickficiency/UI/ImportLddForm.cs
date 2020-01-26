@@ -2,12 +2,8 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
-using System.Drawing;
 using System.IO;
 using System.Linq;
-using System.Text;
-using System.Threading;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 using WindmillHelix.Brickficiency2.Common;
 using WindmillHelix.Brickficiency2.Common.Domain;
@@ -34,7 +30,7 @@ namespace Brickficiency.UI
             base.OnShown(e);
 
             var dialogResult = OpenLddFileDialog.ShowDialog();
-            if(dialogResult != DialogResult.OK)
+            if (dialogResult != DialogResult.OK)
             {
                 this.Close();
                 return;
@@ -72,7 +68,7 @@ namespace Brickficiency.UI
             foreach (var lddPart in aggregated)
             {
                 var mapResult = _lddMapperService.MapItem(lddPart.Part);
-                if(mapResult.WasSuccessful)
+                if (mapResult.WasSuccessful)
                 {
                     mappedParts.Add(new Tuple<MappedPart, int>(mapResult.Mapped, lddPart.Count));
                 }

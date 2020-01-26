@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.ComponentModel;
 using WindmillHelix.Brickficiency2.Services.Calculator.Models;
 
 namespace WindmillHelix.Brickficiency2.Services.Calculator

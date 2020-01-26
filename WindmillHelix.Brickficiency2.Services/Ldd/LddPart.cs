@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace WindmillHelix.Brickficiency2.Services.Ldd
+﻿namespace WindmillHelix.Brickficiency2.Services.Ldd
 {
     public class LddPart
     {
@@ -23,7 +17,7 @@ namespace WindmillHelix.Brickficiency2.Services.Ldd
             }
 
             var y = obj as LddPart;
-            if(object.ReferenceEquals(y, null))
+            if (object.ReferenceEquals(y, null))
             {
                 return false;
             }

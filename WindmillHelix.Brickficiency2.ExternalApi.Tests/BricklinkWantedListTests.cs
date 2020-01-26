@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Autofac;
+﻿using Autofac;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using WindmillHelix.Brickficiency2.DependencyInjection;
 using WindmillHelix.Brickficiency2.ExternalApi.Bricklink;
@@ -42,7 +37,7 @@ namespace WindmillHelix.Brickficiency2.ExternalApi.Tests
             Assert.IsNotNull(wantedLists);
             Assert.AreNotEqual(0, wantedLists.Count);
 
-            foreach(var wantedList in wantedLists)
+            foreach (var wantedList in wantedLists)
             {
                 var items = _api.GetWantedListItems(wantedList.WantedListId);
             }
