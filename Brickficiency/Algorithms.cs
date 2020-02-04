@@ -468,49 +468,17 @@ namespace Brickficiency
                         */
 
                         //start Bitarray logic
-                        //** nö, clone geht nicht
-                        //bitArrayEnough = storeList[current[0]].getBitArray(Store.bitArrayEnough).Clone();
-                        //bitArrayFew = storeList[current[0]].getBitArray(Store.bitArrayFew).Clone;
+                        
                         for (int i = 0; i < k; i++)
                         {
                             bitArrayEnough.Or(storeList[current[i]].getBitArray(Store.bitArrayEnough));
                             bitArrayFew.Or(storeList[current[i]].getBitArray(Store.bitArrayFew));
-                        };
-
-                        //toDo: Switch from for to foreach
-                        /*
-                        int itemIndex = 0;
-                        foreach (Boolean bit in bitArrayEnough)
-                        {
-                            if (!bit)
-                            {
-                                if (bitArrayFew[itemIndex])
-                                {
-                                    int totalQty = 0;
-                                    for (int i = 0; i < k; i++)
-                                    {
-                                        totalQty += storeList[current[i]].getQty(itemList[itemIndex].extid);
-                                    }
-                                    if (totalQty < itemList[itemIndex].qty)
-                                    {
-                                        fail = true;
-                                        break;
-                                    }
-                                }
-                                else
-                                {
-                                    fail = true;
-                                    break;
-                                }
-                            }
-                            itemIndex++;
-                        }
-                        */
+                        };                                               
                         
                         for (int itemIndex = 0; itemIndex < itemList.Count; itemIndex++)
                         {
                             if (!bitArrayEnough.Get(itemIndex))
-                            {
+                             {
                                 if (bitArrayFew.Get(itemIndex))
                                 {
                                     int totalQty = 0;
