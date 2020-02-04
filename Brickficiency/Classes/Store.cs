@@ -23,7 +23,7 @@ namespace Brickficiency.Classes
         public const int bitArrayEnough = 0;
         public const int bitArraySome = 1;
         public const int bitArrayFew = 2;
-        
+
         public StoreItem getItem(string id)
         {
             return items[id];
@@ -54,28 +54,27 @@ namespace Brickficiency.Classes
             bitArrays[bitArrayEnough] = new BitArray(itemList.Count);
             bitArrays[bitArraySome] = new BitArray(itemList.Count);
             bitArrays[bitArrayFew] = new BitArray(itemList.Count);
-                            
-            // ToDo: I need to ensure items have a dedicated index throughout all stores
+                       
             foreach (Item item in itemList)
             {
-                if (this.getQty(item.extid) > 0)
+                if (getQty(item.extid) > 0)
                 {
                     bitArrays[bitArraySome].Set(itemList.IndexOf(item), true);
-                    if (this.getQty(item.extid) > item.qty)
-                    {
-                        bitArrays[bitArrayEnough].Set(itemList.IndexOf(item), true);
-                    }
-                    else
+                    if (item.qty > getQty(item.extid))
                     {
                         bitArrays[bitArrayFew].Set(itemList.IndexOf(item), true);
                     }
-                    // else quantity=0, so bit remains false in all bitArrays
+                    else
+                    {
+                        bitArrays[bitArrayEnough].Set(itemList.IndexOf(item), true);
+                    }
                 }
+                // else quantity=0, so bit remains false in all bitArrays
             }
 
         }
 
-        public BitArray GetBitArray(int BitArrayType)
+        public BitArray getBitArray(int BitArrayType)
         {
             return bitArrays[BitArrayType];
         }
@@ -138,7 +137,7 @@ namespace Brickficiency.Classes
 
     public class StoreComparerCustom : IComparer<Store>
     {
-        private List<Item> items;        
+        private List<Item> items;
         public StoreComparerCustom(List<Item> items)
         {
             this.items = items;
@@ -147,27 +146,27 @@ namespace Brickficiency.Classes
         {
             for (int i = 0; i < items.Count; i++)
             {
-                if (y.GetBitArray(Store.bitArrayEnough).Get(i))
+                if (y.getBitArray(Store.bitArrayEnough).Get(i))
                 {
-                    if (x.GetBitArray(Store.bitArrayEnough).Get(i))
+                    if (x.getBitArray(Store.bitArrayEnough).Get(i))
                     {
                         i++;
                     }
                     else return 1;
                 }
-                else if (x.GetBitArray(Store.bitArrayEnough).Get(i))
+                else if (x.getBitArray(Store.bitArrayEnough).Get(i))
                 {
                     return -1;
                 }
-                else if (y.GetBitArray(Store.bitArrayFew).Get(i))
+                else if (y.getBitArray(Store.bitArrayFew).Get(i))
                 {
-                    if (x.GetBitArray(Store.bitArrayFew).Get(i))
+                    if (x.getBitArray(Store.bitArrayFew).Get(i))
                     {
                         i++;
                     }
                     else return 1;
                 }
-                else if (x.GetBitArray(Store.bitArrayFew).Get(i))
+                else if (x.getBitArray(Store.bitArrayFew).Get(i))
                 {
                     return -1;
                 }

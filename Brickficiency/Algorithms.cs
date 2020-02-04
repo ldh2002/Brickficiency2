@@ -24,7 +24,7 @@ namespace Brickficiency
 
         private void runTheAlgorithm(int minStores, int maxStores, bool continueWhenMatchesFound,
             //List<Store> storeList, List<Item> itemList, Algorithm alg, PreProcess preProc = null)
-            List<Store> storeList, List<Item> itemList, Algorithm alg, PreProcess preProc)
+            ref List<Store> storeList, List<Item> itemList, Algorithm alg, PreProcess preProc)
         {
             // Pre-process the data
             if (preProc != null)
@@ -49,7 +49,7 @@ namespace Brickficiency
             int minStores,
             int maxStores,
             int millisToRunEach,
-            List<Store> storeList,
+            ref List<Store> storeList,
             List<Item> itemList,
             Algorithm alg,
             //PreProcess preProc = null)
@@ -116,6 +116,8 @@ namespace Brickficiency
             // 3. Store has some of the different items
             // Don't know yet wether to use 2. or 3. or both.
             // Question: where do I put the arrays? I'll try to add it to the stores directly.
+            sortStoreItems(itemList);
+            storeList = sortStoreListItems(storeList, itemList);
             createBitArraysforStoreList(storeList, itemList);
 
             // Sort the stores in descending order by qty of the first 1-4 items on the sorted wanted list
@@ -130,11 +132,48 @@ namespace Brickficiency
             return itemList.OrderBy(i => i.availstores).ToList();
         }
 
+        private List<Store> sortStoreListItems(List<Store> storeList, List<Item> itemList)
+        {
+            List<Store> storeListNew = new List<Store>();
+            foreach (Store store in storeList)
+            {
+                storeListNew.Add(new Store(store.getName(), StoreDictionary[store.getName()]));
+            }
+            return storeListNew;
+        }
+
+        private void sortStoreItems(List<Item> itemList)
+        {
+            Dictionary<string, Dictionary<string, StoreItem>> StoreDictionaryTemp = new Dictionary<string, Dictionary<string, StoreItem>>();
+            Dictionary<string, StoreItem> storeItems;
+            foreach (KeyValuePair<string, Dictionary<string, StoreItem>> kvp in StoreDictionary)
+            {
+                StoreItem storeItem = new StoreItem();
+                storeItems = new Dictionary<string, StoreItem>();
+                foreach (Item item in itemList)
+                {
+                    storeItems.Add(item.extid, StoreDictionary[kvp.Key][item.extid]);
+                }
+                StoreDictionaryTemp.Add(kvp.Key, storeItems);
+            }
+            foreach (KeyValuePair<string, Dictionary<string, StoreItem>> kvp in StoreDictionaryTemp)
+            {
+                StoreDictionary[kvp.Key] = StoreDictionaryTemp[kvp.Key];
+            }
+
+        }
+
         private void createBitArraysforStoreList(List<Store> storeList, List<Item> itemList)
         {
+            BitArray[] bitArrays = new BitArray[3];
             foreach (Store store in storeList)
             {
                 store.createBitArrays(itemList);
+                for (int i = 0; i < 3; i++)
+                {
+                    bitArrays[i] = store.getBitArray(i);
+                }
+                BitArrayDictionary.Add(store.getName(), bitArrays);
             }
         }
 
@@ -182,8 +221,7 @@ namespace Brickficiency
 
             }
 
-            //2. find stores providing at least the same products
-
+            // find stores providing at least the same products
             int i = storeBitArrayList.Count - 1;
             int j = 0;
             while (i >= 0)
@@ -197,7 +235,6 @@ namespace Brickficiency
                         foreach (Item item in itemList)
                         {
                             // if price is at least once lower
-                            //if (item.price < storeList[j].getPrice(item.extid) && item.price > 0)
                             if (storeList[i].getPrice(item.extid) < storeList[j].getPrice(item.extid) && storeList[i].getPrice(item.extid) > 0)
                             {
                                 isShopInferior = false;
@@ -363,6 +400,7 @@ namespace Brickficiency
                 // Need to add one to the second argument since it is exclusive.
                 Parallel.For(0, lastnonzeroindex[0] + 1, store1 =>
                 {
+
                     if (calcWorker.CancellationPending || stopAlgorithmEarly)
                     {
                         return;
@@ -381,7 +419,8 @@ namespace Brickficiency
                     {
                         return;
                     }
-
+                    BitArray bitArrayEnough = new BitArray(itemList.Count);
+                    BitArray bitArrayFew = new BitArray(itemList.Count);
                     int[] start = new int[k];
                     int[] end = new int[k];
                     for (int i = 0; i < k; i++)
@@ -403,7 +442,8 @@ namespace Brickficiency
                         {
                             break;
                         }
-
+                        bitArrayEnough.SetAll(false);
+                        bitArrayFew.SetAll(false);
                         int[] current = subs.next();
                         Interlocked.Increment(ref longcount);
                         bool fail = false;
@@ -428,26 +468,31 @@ namespace Brickficiency
                         */
 
                         //start Bitarray logic
-                        BitArray bitArrayEnough = storeList[current[0]].GetBitArray(Store.bitArrayEnough);
-                        BitArray bitArrayFew = storeList[current[0]].GetBitArray(Store.bitArrayFew);
-                        int totalQty = 0;
-                        for (int i = 1; i < k; i++)
+                        //** nö, clone geht nicht
+                        //bitArrayEnough = storeList[current[0]].getBitArray(Store.bitArrayEnough).Clone();
+                        //bitArrayFew = storeList[current[0]].getBitArray(Store.bitArrayFew).Clone;
+                        for (int i = 0; i < k; i++)
                         {
-                            bitArrayEnough = bitArrayEnough.Or(storeList[current[i]].GetBitArray(Store.bitArrayEnough));
-                            bitArrayFew = bitArrayFew.Or(storeList[current[i]].GetBitArray(Store.bitArrayFew));
+                            bitArrayEnough.Or(storeList[current[i]].getBitArray(Store.bitArrayEnough));
+                            bitArrayFew.Or(storeList[current[i]].getBitArray(Store.bitArrayFew));
                         };
-                        for (int itemIndex = 0; itemIndex < itemList.Count; itemIndex++)
+
+                        //toDo: Switch from for to foreach
+                        /*
+                        int itemIndex = 0;
+                        foreach (Boolean bit in bitArrayEnough)
                         {
-                            if (!bitArrayEnough.Get(itemIndex))
+                            if (!bit)
                             {
-                                if (bitArrayFew.Get(itemIndex))
-                                {                             
+                                if (bitArrayFew[itemIndex])
+                                {
+                                    int totalQty = 0;
                                     for (int i = 0; i < k; i++)
                                     {
                                         totalQty += storeList[current[i]].getQty(itemList[itemIndex].extid);
                                     }
                                     if (totalQty < itemList[itemIndex].qty)
-                                    { 
+                                    {
                                         fail = true;
                                         break;
                                     }
@@ -458,9 +503,36 @@ namespace Brickficiency
                                     break;
                                 }
                             }
+                            itemIndex++;
+                        }
+                        */
+                        
+                        for (int itemIndex = 0; itemIndex < itemList.Count; itemIndex++)
+                        {
+                            if (!bitArrayEnough.Get(itemIndex))
+                            {
+                                if (bitArrayFew.Get(itemIndex))
+                                {
+                                    int totalQty = 0;
+                                    for (int i = 0; i < k; i++)
+                                    {
+                                        totalQty += storeList[current[i]].getQty(itemList[itemIndex].extid);
+                                    }
+                                    if (totalQty < itemList[itemIndex].qty)
+                                    {
+                                        fail = true;
+                                        break;
+                                    }
+                                }
+                                else
+                                {
+                                    fail = true;
+                                    break;
+                                }
+                            }                            
                         }
                         //end Bitarray logic
-
+                        
                         if (!fail)
                         {
                             List<string> storeNames = new List<string>();
@@ -468,7 +540,7 @@ namespace Brickficiency
                             {
                                 storeNames.Add(storeList[current[i]].getName());
                             }
-                            addFinalMatch(storeNames);
+                            addFinalMatch(storeNames, ref itemList);
                         }
                     }
                     Progress();

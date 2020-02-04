@@ -1,6 +1,7 @@
 ﻿using Brickficiency.Classes;
 using Brickficiency.UI;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -116,7 +117,8 @@ namespace Brickficiency
 
         public List<Item> WantedItemList = new List<Item>();
         public Dictionary<string, Dictionary<string, StoreItem>> StoreDictionary = new Dictionary<string, Dictionary<string, StoreItem>>();
-        public List<Store> StoreList = new List<Store>();
+        public Dictionary<string, BitArray[]> BitArrayDictionary = new Dictionary<string, BitArray[]>();
+        public List<Store> storeList = new List<Store>();
         private Boolean stopAlgorithmEarly = false;
         private System.Timers.Timer timeoutTimer;
         public HashSet<string> storesWithItemsList = new HashSet<string>();

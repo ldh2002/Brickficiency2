@@ -1,5 +1,6 @@
 ﻿using Brickficiency.Classes;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.IO;
@@ -79,7 +80,16 @@ namespace Brickficiency
 
             AddMissingItemsToStores();
 
-            StoreList = StoreDictionaryToList(StoreDictionary);
+            // try to sort the items in the stores
+            /*foreach (Store store in StoreDictionary)
+            {
+                foreach (Item item in store.items)
+                    itemList.OrderBy(i => i.availstores).ToList()
+            }
+            */
+
+
+            storeList = StoreDictionaryToList(StoreDictionary);
             WantedItemList = new List<Item>(calcitems);
 
             ReportStart();
@@ -89,11 +99,11 @@ namespace Brickficiency
             {
                 case RUN_NEW:
                     //runTheAlgorithm(settings.minstores, settings.maxstores, settings.cont, StoreList, WantedItemList, KStoreCalc, StandardPreProcess);
-                    runTheAlgorithm(settings.minstores, settings.maxstores, settings.cont, StoreList, WantedItemList, KStoreCalc, CustomPreProcess);
+                    runTheAlgorithm(settings.minstores, settings.maxstores, settings.cont, ref storeList, WantedItemList, KStoreCalcBitOperations, CustomPreProcess);
                     break;
                 case RUN_APPROX:
                     //runApproxAlgorithm(settings.minstores, settings.maxstores, settings.approxtime * 1000, StoreList, WantedItemList, KStoreCalc, StandardPreProcess);
-                    runApproxAlgorithm(settings.minstores, settings.maxstores, settings.approxtime * 1000, StoreList, WantedItemList, KStoreCalc, CustomPreProcess);
+                    runApproxAlgorithm(settings.minstores, settings.maxstores, settings.approxtime * 1000, ref storeList, WantedItemList, KStoreCalcBitOperations, CustomPreProcess);
                     break;
             }
 
@@ -798,21 +808,28 @@ namespace Brickficiency
         }
         //When a final match is found, populate a list with the names of the 
         //stores and use this method to add the correct information about the final match
-        private void addFinalMatch(List<string> storeNamesInMatch)
+        private void addFinalMatch(List<string> storeNamesInMatch, ref List<Item> itemList)
         {
             matchesfound = true;
 
             FinalMatch theMatch = new FinalMatch();
             List<Store> storesInMatch = new List<Store>();
+            //temp dbugginghelp
+            //Dictionary<String, BitArray[]> tempBitArrayDictionary = new Dictionary<String, BitArray[]>();
+            //BitArray[] tempBitArray = new BitArray[3];
+            //end temp debugginghelp
             foreach (string storename in storeNamesInMatch)
             {
                 theMatch.AddStore(storename);
                 storesInMatch.Add(new Store(storename, StoreDictionary[storename]));
+                //debugginhelp start
+                //tempBitArrayDictionary.Add(storename, BitArrayDictionary[storename]);
+                //debugginghelp end
             }
 
-            for (int i = 0; i < WantedItemList.Count; i++)
+            for (int i = 0; i < itemList.Count; i++)
             {
-                Item item = WantedItemList[i];
+                Item item = itemList[i];
                 storesInMatch = storesInMatch.OrderBy(s => s.getPrice(item.extid)).ThenByDescending((s => s.getQty(item.extid))).ToList();
                 int totalwantedqty = item.qty;
                 int storeindex = 0;
@@ -837,6 +854,12 @@ namespace Brickficiency
             }
             MatchAdd(theMatch);
         }
+        private void addFinalMatch(List<string> storeNamesInMatch)
+        {
+            addFinalMatch(storeNamesInMatch, ref WantedItemList);
+        }
+
+
         private void endCalculation(int k)
         {
             running = false;

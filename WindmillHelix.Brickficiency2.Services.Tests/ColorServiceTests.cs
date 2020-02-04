@@ -3,8 +3,6 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Linq;
 using WindmillHelix.Brickficiency2.DependencyInjection;
 using WindmillHelix.Brickficiency2.Services.Data;
-using Autofac;
-using WindmillHelix.Brickficiency2.DependencyInjection;
 
 namespace WindmillHelix.Brickficiency2.Services.Tests
 {
