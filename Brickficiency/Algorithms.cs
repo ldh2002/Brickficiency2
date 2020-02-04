@@ -467,14 +467,18 @@ namespace Brickficiency
                         };
                         */
 
-                        //start Bitarray logic                        
+                        //start Bitarray logic
+                        //** nö, clone geht nicht
+                        //bitArrayEnough = storeList[current[0]].getBitArray(Store.bitArrayEnough).Clone();
+                        //bitArrayFew = storeList[current[0]].getBitArray(Store.bitArrayFew).Clone;
                         for (int i = 0; i < k; i++)
                         {
                             bitArrayEnough.Or(storeList[current[i]].getBitArray(Store.bitArrayEnough));
                             bitArrayFew.Or(storeList[current[i]].getBitArray(Store.bitArrayFew));
                         };
 
-                        // new approach with foreach, avoiding BitArray.Get                        
+                        //toDo: Switch from for to foreach
+                        /*
                         int itemIndex = 0;
                         foreach (Boolean bit in bitArrayEnough)
                         {
@@ -501,9 +505,8 @@ namespace Brickficiency
                             }
                             itemIndex++;
                         }
+                        */
                         
-                        // old approach with BitArray.Get
-                        /*
                         for (int itemIndex = 0; itemIndex < itemList.Count; itemIndex++)
                         {
                             if (!bitArrayEnough.Get(itemIndex))
@@ -528,7 +531,6 @@ namespace Brickficiency
                                 }
                             }                            
                         }
-                        */
                         //end Bitarray logic
                         
                         if (!fail)
