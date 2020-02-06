@@ -1175,7 +1175,7 @@ namespace Brickficiency
         }
         #endregion
 
-        #region Add Status Text
+        #region Status Text
         public void AddStatus(string text)
         {
             this.BeginInvoke(new MethodInvoker(delegate ()
@@ -1189,6 +1189,16 @@ namespace Brickficiency
                     statusBox.AppendText(text);
                 }
             }));
+        }
+
+        public void UpdateStatusbar(string text)
+        {
+            this.BeginInvoke(new MethodInvoker(delegate ()
+            {
+                toolStripStatusLabel.Text = text;
+                statusStrip1.Refresh();
+            }));
+            
         }
         #endregion
 

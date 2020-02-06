@@ -580,10 +580,25 @@ namespace Brickficiency
             lock (calcLock)
             {
                 matchesfoundcount++;
-                matches.Add(thismatch);
-                if (matches.Count > settings.nummatches)
+                if (matches.Count > 0)
                 {
-                    matches = matches.OrderBy(i => i.totalprice).Take(settings.nummatches).ToList();
+                    if (matches.Max(x => x.totalprice) > thismatch.totalprice)
+                    {
+                        if (matches.Min(x => x.totalprice) > thismatch.totalprice)
+                        {
+                            UpdateStatusbar("Best Match: $ " + thismatch.totalprice.ToString());
+                        }
+                        matches.Add(thismatch);
+                        if (matches.Count > settings.nummatches)
+                        {
+                            matches = matches.OrderBy(i => i.totalprice).Take(settings.nummatches).ToList();
+                        }
+                    }
+                }
+                else
+                {
+                    matches.Add(thismatch);
+                    UpdateStatusbar("Best Match: $ " + thismatch.totalprice.ToString());
                 }
             }
         }
